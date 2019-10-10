@@ -18,6 +18,6 @@ Run the `Start.bat` file.
 
 ### Actions
 
-##### Restore Windows (default: alt + numpad 1)
+##### Restore Windows (default: ctrl + alt + numpad 1 -- with numlock off)
 
 Restores the position/size of each window to what it was just prior to the last time the computer entered sleep mode.

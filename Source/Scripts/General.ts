@@ -1,18 +1,32 @@
 import ioHook from "iohook";
+import {extraKeys} from "../Input/ExtraKeys";
+
+ioHook.useRawcode(true); // use rawcodes for shortcuts/hotkeys
+
+// logging
+// ==========
 
 /*ioHook.on('keydown', event => {
 	console.log(event); // { type: 'mousemove', x: 700, y: 400 }
 });*/
 
-// if registerShortcut used the rawcodes this would work
-/*const id = ioHook.registerShortcut([extraKeys.leftAlt, keycode.codes.f1], (keys) => {
-	console.log('Shortcut called with keys:', keys);
-});*/
-const id = ioHook.registerShortcut([56, 3663], (keys) => {
+// hotkeys
+// ==========
+
+// if using keycodes
+/*const id = ioHook.registerShortcut([56, 3663], (keys) => {
 	console.log('Shortcut called with keys: ', keys);
 	// todo
+});*/
+
+// if using rawcodes
+const id = ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.numpadEnd], (keys) => {
+	console.log('Shortcut called with keys: ', keys);
 });
 
-// Register and start hook
+// init
+// ==========
+
+// register and start hook
 ioHook.start(false);
 Log("Added listeners");

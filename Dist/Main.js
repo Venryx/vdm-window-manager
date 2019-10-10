@@ -166,6 +166,71 @@ function G() {
 
 /***/ }),
 
+/***/ "./Source/Input/ExtraKeys.ts":
+/*!***********************************!*\
+  !*** ./Source/Input/ExtraKeys.ts ***!
+  \***********************************/
+/*! exports provided: extraKeys, MouseButton */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "extraKeys", function() { return extraKeys; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MouseButton", function() { return MouseButton; });
+// full list here: http://cherrytree.at/misc/vk.htm
+var extraKeys = {
+  leftShift: 160,
+  rightShift: 161,
+  leftControl: 162,
+  rightControl: 163,
+  leftAlt: 164,
+  rightAlt: 165,
+  meta_windows: 91,
+  // custom
+  mouseLeft: 1000 + 1,
+  mouseRight: 1000 + 2,
+  mouseMiddle: 1000 + 3,
+  mouseForward: 1000 + 4,
+  mouseBackward: 1000 + 5,
+  mouseWheelUp: 1000 + 6,
+  mouseWheelDown: 1000 + 7,
+  // number row
+  N1: 49,
+  // slashes and such
+
+  /*slash: 191,
+  backslash: 220,*/
+  volumeDown: 174,
+  volumeUp: 175,
+  // numpad keys
+  // All of these, except for numpadCenter, are in regular keycode collection, but kept here too since naming is confusing.
+  // (For example, [numpad insert] is same as [insert], but [numpad +] is not same as [+].)
+  // ==========
+  numpadDivide: 111,
+  numpadHome: 36,
+  numpadUp: 38,
+  numpadInsert: 45,
+  numpadCenter: 12,
+  numpadMultiply: 106,
+  numpadSubtract: 109,
+  numpadAdd: 107,
+  numpadEnter: 108,
+  numpadEnd: 35,
+  numpadDown: 40
+}; // smaller copy sets
+
+var MouseButton;
+
+(function (MouseButton) {
+  MouseButton[MouseButton["Left"] = extraKeys.mouseLeft] = "Left";
+  MouseButton[MouseButton["Right"] = extraKeys.mouseRight] = "Right";
+  MouseButton[MouseButton["Middle"] = extraKeys.mouseMiddle] = "Middle";
+  MouseButton[MouseButton["Forward"] = extraKeys.mouseForward] = "Forward";
+  MouseButton[MouseButton["Backward"] = extraKeys.mouseBackward] = "Backward";
+})(MouseButton || (MouseButton = {}));
+
+/***/ }),
+
 /***/ "./Source/Main.ts":
 /*!************************!*\
   !*** ./Source/Main.ts ***!
@@ -246,19 +311,31 @@ process__WEBPACK_IMPORTED_MODULE_6___default.a.on("message", function (message) 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! iohook */ "iohook");
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(iohook__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Input/ExtraKeys */ "./Source/Input/ExtraKeys.ts");
+
+
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.useRawcode(true); // use rawcodes for shortcuts/hotkeys
+// logging
+// ==========
 
 /*ioHook.on('keydown', event => {
     console.log(event); // { type: 'mousemove', x: 700, y: 400 }
 });*/
-// if registerShortcut used the rawcodes this would work
+// hotkeys
+// ==========
+// if using keycodes
 
-/*const id = ioHook.registerShortcut([extraKeys.leftAlt, keycode.codes.f1], (keys) => {
-    console.log('Shortcut called with keys:', keys);
+/*const id = ioHook.registerShortcut([56, 3663], (keys) => {
+    console.log('Shortcut called with keys: ', keys);
+    // todo
 });*/
+// if using rawcodes
 
-var id = iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([56, 3663], function (keys) {
-  console.log('Shortcut called with keys: ', keys); // todo
-}); // Register and start hook
+var id = iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadEnd], function (keys) {
+  console.log('Shortcut called with keys: ', keys);
+}); // init
+// ==========
+// register and start hook
 
 iohook__WEBPACK_IMPORTED_MODULE_0___default.a.start(false);
 Log("Added listeners");
