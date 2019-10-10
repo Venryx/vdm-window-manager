@@ -1,0 +1,1 @@
+node ./Dist/Main.js & pause & Start.bat

@@ -1,0 +1,43 @@
+{
+  "name": "vdm-window-manager",
+  "version": "0.0.1",
+  "description": "Utility for managing window states. Examples: preserve window positions/sizes through sleep, move sets of windows between monitors",
+  "main": "Dist/Main.js",
+  "typings": "Dist/Main.d.ts",
+  "scripts": {
+    "dev": "webpack --config webpack.config.js --colors --progress --watch",
+    "#dist": "babel src/index.jsx -u -o dist/index.js --stage 1 --presets react"
+  },
+  "author": {
+    "name": "Venryx",
+    "email": "venryx@gmail.com",
+    "url": "http://venryx.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/chroma-js": "^1.3.1",
+    "chroma-js": "2.0.4",
+    "death": "^1.1.0",
+    "ffi": "2.3.0",
+    "iohook": "0.6.1",
+    "js-vextensions": "0.0.3",
+    "keycode": "^2.1.8",
+    "raw-loader": "^0.5.1",
+    "ref": "^1.3.5",
+    "ref-array": "^1.2.0",
+    "robotjs": "^0.4.7",
+    "webworker-threads": "^0.7.11"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@types/ffi": "^0.1.0",
+    "babel-cli": "^6.4.5",
+    "babel-loader": "^8.0.4",
+    "json-loader": "^0.5.4",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.4.5",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}

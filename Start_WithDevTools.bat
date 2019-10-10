@@ -1,0 +1,1 @@
+node --inspect Dist/Main.js & pause & Start_WithDevTools.bat
