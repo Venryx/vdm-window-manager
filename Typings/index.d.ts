@@ -1,3 +1,5 @@
+import 'ffi/node-ffi-buffer'
+
 // libraries
 declare var O;
 //declare var React;

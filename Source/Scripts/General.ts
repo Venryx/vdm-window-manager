@@ -1,5 +1,8 @@
 import ioHook from "iohook";
 import {extraKeys} from "../Input/ExtraKeys";
+import {GetWindowHandles, GetWindowText, GetWindowRect, GetForegroundWindowText} from "../General/Windows";
+import {ToJSON} from "js-vextensions";
+import ref from "ref";
 
 // If using iohook turns out insufficient (eg. not being able to capture keypresses for a desired hotkey), try using the Windows RegisterHotKey function:
 // * https://stackoverflow.com/questions/14799035/node-webkit-winapi/58314436#58314436
@@ -26,7 +29,29 @@ ioHook.useRawcode(true); // use rawcodes for shortcuts/hotkeys
 
 // if using rawcodes
 const id = ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.numpadEnd], (keys) => {
-	console.log('Shortcut called with keys: ', keys);
+	//console.log('Shortcut called with keys: ', keys);
+	//Log("Got text: " + GetForegroundWindowText());
+
+	let windows = GetWindowHandles();
+	windows.forEach(handle=> {
+		//let text = null, rect = null;
+		let text = GetWindowText(handle as any);
+		let rect = GetWindowRect(handle as any);
+		console.log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
+
+		/*let text = GetWindowText(handle.Int());
+		let rect = GetWindowRect(handle.Int());*/
+		//console.log(`Found window. @Handle(${handle.Int()}) @Title(${text}) @Rect(${rect})`);
+		
+		/*var buf = ref.alloc('pointer');
+		ref.writePointer(buf, 0, handle); // pointer or memory address*/
+
+		/*let a = Uint8Array.from([1,2,3,7,4,8]) as Buffer;
+		Object.setPrototypeOf(a, Buffer.prototype);
+		a.type = "pointer";
+		
+		console.log(`Found window. @Old(${handle.Int()}) @New(${handle.Int().Buf().Int()}) @Test(${a.address()})`);*/
+	});
 });
 
 // init

@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { Vector2i } from "js-vextensions";
 export declare const WM_KEYDOWN = 256;
 export declare const WM_KEYUP = 257;
