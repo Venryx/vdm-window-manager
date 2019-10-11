@@ -78,6 +78,20 @@ user32_numbers.GetWindowTextW();*/
 }
 user32.GetWindowTextW();*/
 
+// add Typescript overloads for the functions which were modified to send/receive number-handles instead of Buffer-handles
+/*declare module "win32-api/dist/lib/user32/api" {
+	export namespace M {
+		export type HWND = number;
+	}
+}*/
+type RealBuffer = Buffer;
+declare module "win32-api/node_modules/win32-def/dist/lib/win-model/common" {
+	//type HWND = number;
+	//type Buffer = number;
+	type Buffer = number | RealBuffer;
+}
+//user32.GetWindowTextW();
+
 
 
 
@@ -91,42 +105,10 @@ user32.GetWindowTextW();*/
 //var voidPtr = ref.refType(ref.types.void);
 //var stringPtr = ref.refType(ref.types.CString);
 
-declare global {
+/*declare global {
 	interface Buffer { Int(): number; }
 	interface Number { Buf(): Buffer; }
 }
-
-/*Buffer.prototype.Int = function() {
-	return ref.address(this);
-}
-Number.prototype.Buf = function() {
-	//return ref.alloc(ref.types.int, this);
-	//return ref.alloc(ref.types.int32, this);
-	/*let valBuf = ref.alloc(ref.types.long, this);
-	return valBuf;*/
-	//let valBuf = ref.alloc(ref.types.int32, this);
-
-	/*let a = Uint8Array.from([1,2,3,7,4,8]);
-	Object.setPrototypeOf(a, Buffer.prototype);
-	return a as Buffer;*/
-
-	/*let valBuf = ref.alloc(ref.types.uint64, this);
-	ref.writePointer(valBuf, 0, ref.alloc(ref.types.int, this));
-	let size = user32.GetForegroundWindow().byteLength
-	//ref.writePointer(valBuf, 0, );
-	return valBuf;*#/
-
-	var buf = ref.alloc('pointer');
-	ref.writePointer(buf, 0, Buffer.from([1,2,3,4,5,6])); // pointer or memory address
-	return buf;
-}*/
-/*export function Swap(val: Buffer): number;
-export function Swap(val: number): Buffer;
-export function Swap(val: number | Buffer) {
-	if (val instanceof Buffer) return ref.address(val);
-	//return ref.alloc(ref.types.int32, )
-	return ref.alloc(ref.types.int, val);
-}*/
 Object.prototype["Int"] = function() {
 	if (this instanceof Buffer) return ref.address(this); // convert
 	//if (typeof this == "number")
@@ -136,7 +118,7 @@ Object.prototype["Buf"] = function() {
 	//if (typeof this == "number") return ...; // convert (don't know how)
 	//if (typeof this == "number")
 	return this; // handle is already number (matching modified definition-array) -- just return
-}
+}*/
 
 var user32_extra = new ffi.Library("user32", {
 	//EnumWindows: ['bool', [voidPtr, 'int32']],
@@ -172,7 +154,8 @@ export function GetWindowHandles() {
 }*/
 
 export function GetForegroundWindowHandle() {
-	return user32.GetForegroundWindow().Int();
+	//return user32.GetForegroundWindow().Int();
+	return user32.GetForegroundWindow() as number;
 	//return user32.GetForegroundWindow() as any as number;
 }
 export function GetForegroundWindowText() {
@@ -188,7 +171,8 @@ export function GetWindowText(handle: number) {
 	//let length = user32.GetWindowTextW(user32.GetForegroundWindow(), buffer, 256);
 	//let length = user32_extra.GetWindowTextA(handle, buffer, 256);
 	//let length = user32.GetWindowTextA(handle, buffer, 256);
-	let length = user32.GetWindowTextW(handle.Buf(), buffer, 256);
+	//let length = user32.GetWindowTextW(handle.Buf(), buffer, 256);
+	let length = user32.GetWindowTextW(handle, buffer, 256);
 	//let length = user32.GetWindowTextW(handle as any, buffer, 256);
 	//return ref.readCString(buffer, 0);
 	//return buffer.toString().substr(0, length as any);

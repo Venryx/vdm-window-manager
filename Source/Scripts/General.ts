@@ -35,8 +35,8 @@ const id = ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, ex
 	let windows = GetWindowHandles();
 	windows.forEach(handle=> {
 		//let text = null, rect = null;
-		let text = GetWindowText(handle as any);
-		let rect = GetWindowRect(handle as any);
+		let text = GetWindowText(handle);
+		let rect = GetWindowRect(handle);
 		console.log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
 
 		/*let text = GetWindowText(handle.Int());

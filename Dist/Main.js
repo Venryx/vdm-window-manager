@@ -187,12 +187,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var win32_api__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(win32_api__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var ffi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ffi */ "ffi");
 /* harmony import */ var ffi__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(ffi__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var ref__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ref */ "ref");
-/* harmony import */ var ref__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ref__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! js-vextensions */ "js-vextensions");
-/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(js_vextensions__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! js-vextensions */ "js-vextensions");
+/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(js_vextensions__WEBPACK_IMPORTED_MODULE_2__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 
 
 
@@ -221,7 +218,7 @@ try {
     var pair = _step.value;
     var definitionArray = pair.value; //Log(`Name(${pair.key}) Returns(${pair.value[0]}) Arguments(${pair.value[1]})`);
 
-    var nodes = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["GetTreeNodesInObjTree"])(definitionArray);
+    var nodes = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_2__["GetTreeNodesInObjTree"])(definitionArray);
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
     var _iteratorError2 = undefined;
@@ -305,52 +302,24 @@ try {
   }
 }
 
-var user32 = win32_api__WEBPACK_IMPORTED_MODULE_0__["User32"].load();
-/*Buffer.prototype.Int = function() {
-    return ref.address(this);
+var user32 = win32_api__WEBPACK_IMPORTED_MODULE_0__["User32"].load(); //user32.GetWindowTextW();
+//var voidPtr = ref.refType(ref.types.void);
+//var stringPtr = ref.refType(ref.types.CString);
+
+/*declare global {
+    interface Buffer { Int(): number; }
+    interface Number { Buf(): Buffer; }
 }
-Number.prototype.Buf = function() {
-    //return ref.alloc(ref.types.int, this);
-    //return ref.alloc(ref.types.int32, this);
-    /*let valBuf = ref.alloc(ref.types.long, this);
-    return valBuf;*/
-//let valBuf = ref.alloc(ref.types.int32, this);
-
-/*let a = Uint8Array.from([1,2,3,7,4,8]);
-Object.setPrototypeOf(a, Buffer.prototype);
-return a as Buffer;*/
-
-/*let valBuf = ref.alloc(ref.types.uint64, this);
-ref.writePointer(valBuf, 0, ref.alloc(ref.types.int, this));
-let size = user32.GetForegroundWindow().byteLength
-//ref.writePointer(valBuf, 0, );
-return valBuf;*#/
-
-var buf = ref.alloc('pointer');
-ref.writePointer(buf, 0, Buffer.from([1,2,3,4,5,6])); // pointer or memory address
-return buf;
+Object.prototype["Int"] = function() {
+    if (this instanceof Buffer) return ref.address(this); // convert
+    //if (typeof this == "number")
+    return this; // handle is already number -- just return
+}
+Object.prototype["Buf"] = function() {
+    //if (typeof this == "number") return ...; // convert (don't know how)
+    //if (typeof this == "number")
+    return this; // handle is already number (matching modified definition-array) -- just return
 }*/
-
-/*export function Swap(val: Buffer): number;
-export function Swap(val: number): Buffer;
-export function Swap(val: number | Buffer) {
-    if (val instanceof Buffer) return ref.address(val);
-    //return ref.alloc(ref.types.int32, )
-    return ref.alloc(ref.types.int, val);
-}*/
-
-Object.prototype["Int"] = function () {
-  if (this instanceof Buffer) return ref__WEBPACK_IMPORTED_MODULE_2___default.a.address(this); // convert
-  //if (typeof this == "number")
-
-  return this; // handle is already number -- just return
-};
-
-Object.prototype["Buf"] = function () {
-  //if (typeof this == "number") return ...; // convert (don't know how)
-  //if (typeof this == "number")
-  return this; // handle is already number (matching modified definition-array) -- just return
-};
 
 var user32_extra = new ffi__WEBPACK_IMPORTED_MODULE_1___default.a.Library("user32", {
   //EnumWindows: ['bool', [voidPtr, 'int32']],
@@ -384,7 +353,8 @@ function GetWindowHandles() {
 }*/
 
 function GetForegroundWindowHandle() {
-  return user32.GetForegroundWindow().Int(); //return user32.GetForegroundWindow() as any as number;
+  //return user32.GetForegroundWindow().Int();
+  return user32.GetForegroundWindow(); //return user32.GetForegroundWindow() as any as number;
 }
 function GetForegroundWindowText() {
   var handle = GetForegroundWindowHandle();
@@ -397,8 +367,9 @@ function GetWindowText(handle) {
   //let length = user32.GetWindowTextW(user32.GetForegroundWindow(), buffer, 256);
   //let length = user32_extra.GetWindowTextA(handle, buffer, 256);
   //let length = user32.GetWindowTextA(handle, buffer, 256);
+  //let length = user32.GetWindowTextW(handle.Buf(), buffer, 256);
 
-  var length = user32.GetWindowTextW(handle.Buf(), buffer, 256); //let length = user32.GetWindowTextW(handle as any, buffer, 256);
+  var length = user32.GetWindowTextW(handle, buffer, 256); //let length = user32.GetWindowTextW(handle as any, buffer, 256);
   //return ref.readCString(buffer, 0);
   //return buffer.toString().substr(0, length as any);
 
@@ -431,7 +402,7 @@ function RectPointerToRect(rectPointer) {
 }
 
 function RectToVRect(rect) {
-  return new js_vextensions__WEBPACK_IMPORTED_MODULE_3__["VRect"](rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+  return new js_vextensions__WEBPACK_IMPORTED_MODULE_2__["VRect"](rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
 }
 
 var SuspendState;
@@ -771,17 +742,6 @@ module.exports = require("js-vextensions");
 /***/ (function(module, exports) {
 
 module.exports = require("process");
-
-/***/ }),
-
-/***/ "ref":
-/*!**********************!*\
-  !*** external "ref" ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = require("ref");
 
 /***/ }),
 
