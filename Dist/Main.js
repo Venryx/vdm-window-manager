@@ -170,11 +170,12 @@ function G() {
 /*!***********************************!*\
   !*** ./Source/General/Windows.ts ***!
   \***********************************/
-/*! exports provided: WindowInfo, GetWindowHandles, GetForegroundWindowHandle, GetForegroundWindowText, GetWindowText, GetWindowRect, SuspendState, SetSuspendState */
+/*! exports provided: user32, WindowInfo, GetWindowHandles, GetForegroundWindowHandle, GetForegroundWindowText, GetWindowText, GetWindowRect, SuspendState, SetSuspendState */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "user32", function() { return user32; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowInfo", function() { return WindowInfo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetWindowHandles", function() { return GetWindowHandles; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetForegroundWindowHandle", function() { return GetForegroundWindowHandle; });
@@ -462,17 +463,23 @@ var extraKeys = {
   // All of these, except for numpadCenter, are in regular keycode collection, but kept here too since naming is confusing.
   // (For example, [numpad insert] is same as [insert], but [numpad +] is not same as [+].)
   // ==========
-  numpadDivide: 111,
+  // 0-9
+  numpadInsert: 45,
+  numpadEnd: 35,
+  numpadDown: 40,
+  numpadPageDown: 34,
+  numpadLeft: 37,
+  numpadCenter: 12,
+  numpadRight: 39,
   numpadHome: 36,
   numpadUp: 38,
-  numpadInsert: 45,
-  numpadCenter: 12,
+  numpadPageUp: 33,
+  // others, clockwise from top-left
+  numpadDivide: 111,
   numpadMultiply: 106,
   numpadSubtract: 109,
   numpadAdd: 107,
-  numpadEnter: 108,
-  numpadEnd: 35,
-  numpadDown: 40
+  numpadEnter: 108
 }; // smaller copy sets
 
 var MouseButton;
@@ -560,15 +567,18 @@ process__WEBPACK_IMPORTED_MODULE_6___default.a.on("message", function (message) 
 /*!***********************************!*\
   !*** ./Source/Scripts/General.ts ***!
   \***********************************/
-/*! no exports provided */
+/*! exports provided: WindowState */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowState", function() { return WindowState; });
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! iohook */ "iohook");
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(iohook__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Input/ExtraKeys */ "./Source/Input/ExtraKeys.ts");
 /* harmony import */ var _General_Windows__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../General/Windows */ "./Source/General/Windows.ts");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
  // If using iohook turns out insufficient (eg. not being able to capture keypresses for a desired hotkey), try using the Windows RegisterHotKey function:
@@ -585,36 +595,87 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.useRawcode(true); // use rawcodes 
 });*/
 // hotkeys
 // ==========
-// if using keycodes
 
-/*const id = ioHook.registerShortcut([56, 3663], (keys) => {
-    console.log('Shortcut called with keys: ', keys);
-    // todo
-});*/
-// if using rawcodes
+var windowTitlesToIgnore = [// never visible (as real window)
+"Program Manager", // not really visible (at least usually -- and for me)
+"Microsoft Text Input Application", "Backup and Sync", "Settings", "Microsoft Edge"];
+var WindowState = function WindowState(initialData) {
+  _classCallCheck(this, WindowState);
 
-var id = iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadEnd], function (keys) {
-  //console.log('Shortcut called with keys: ', keys);
-  //Log("Got text: " + GetForegroundWindowText());
+  this.Extend(initialData);
+};
+var windowStates = {}; // store states
+
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadEnd], function (keys) {
+  windowStates = {};
   var windows = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowHandles"])();
   windows.forEach(function (handle) {
-    //let text = null, rect = null;
+    if (!_General_Windows__WEBPACK_IMPORTED_MODULE_2__["user32"].IsWindowVisible(handle)) return;
     var text = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowText"])(handle);
     var rect = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowRect"])(handle);
-    console.log("Found window. @Handle(".concat(handle, ") @Title(").concat(text, ") @Rect(").concat(rect, ")"));
-    /*let text = GetWindowText(handle.Int());
-    let rect = GetWindowRect(handle.Int());*/
-    //console.log(`Found window. @Handle(${handle.Int()}) @Title(${text}) @Rect(${rect})`);
+    if (text.length == 0) return;
+    if (windowTitlesToIgnore.Contains(text)) return; //Log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
 
-    /*var buf = ref.alloc('pointer');
-    ref.writePointer(buf, 0, handle); // pointer or memory address*/
-
-    /*let a = Uint8Array.from([1,2,3,7,4,8]) as Buffer;
-    Object.setPrototypeOf(a, Buffer.prototype);
-    a.type = "pointer";
-    
-    console.log(`Found window. @Old(${handle.Int()}) @New(${handle.Int().Buf().Int()}) @Test(${a.address()})`);*/
+    var state = new WindowState({
+      rect: rect,
+      text: text
+    });
+    windowStates[handle] = state;
   });
+  Log("States stored for ".concat(windowStates.Pairs().length, " windows."));
+}); // show stored info
+
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadDown], function (keys) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = windowStates.Pairs()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var pair = _step.value;
+      Log("\tWindow state: @Handle(".concat(pair.key, ") @Title(").concat(pair.value.text, ") @Rect(").concat(pair.value.rect, ")"));
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}); // restore states
+
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadPageDown], function (keys) {
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = windowStates.Pairs()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var pair = _step2.value;
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+        _iterator2["return"]();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  Log("States restored for ".concat(windowStates.Pairs().length, " windows."));
 }); // init
 // ==========
 // register and start hook

@@ -51,7 +51,7 @@ U.apiDef.VSet({
 } as any);*/
 //U.apiDef.GetWindowTextA = ["int32", ["int32", "string", "int32"]];
 
-const user32 = User32.load();
+export const user32 = User32.load() as User32.Win32Fns;
 
 // create extension of user32, which uses type "number" for each param that was of type "Buffer"
 /*declare type ConvertModelFuncParams<T> = {

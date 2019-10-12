@@ -1,8 +1,8 @@
 import ioHook from "iohook";
 import {extraKeys} from "../Input/ExtraKeys";
-import {GetWindowHandles, GetWindowText, GetWindowRect, GetForegroundWindowText} from "../General/Windows";
-import {ToJSON} from "js-vextensions";
-import ref from "ref";
+import {GetWindowHandles, GetWindowText, GetWindowRect, GetForegroundWindowText, user32} from "../General/Windows";
+import {VRect} from "js-vextensions";
+import {User32} from "win32-api";
 
 // If using iohook turns out insufficient (eg. not being able to capture keypresses for a desired hotkey), try using the Windows RegisterHotKey function:
 // * https://stackoverflow.com/questions/14799035/node-webkit-winapi/58314436#58314436
@@ -21,37 +21,53 @@ ioHook.useRawcode(true); // use rawcodes for shortcuts/hotkeys
 // hotkeys
 // ==========
 
-// if using keycodes
-/*const id = ioHook.registerShortcut([56, 3663], (keys) => {
-	console.log('Shortcut called with keys: ', keys);
-	// todo
-});*/
+let windowTitlesToIgnore = [
+	// never visible (as real window)
+	"Program Manager",
+	// not really visible (at least usually -- and for me)
+	"Microsoft Text Input Application", "Backup and Sync", "Settings", "Microsoft Edge",
+];
 
-// if using rawcodes
-const id = ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.numpadEnd], (keys) => {
-	//console.log('Shortcut called with keys: ', keys);
-	//Log("Got text: " + GetForegroundWindowText());
+export class WindowState {
+	constructor(initialData: Partial<WindowState>) {
+		this.Extend(initialData);
+	}
+	rect: VRect;
+	text: string;
+}
+let windowStates = {} as {[key: string]: WindowState};
+
+// store states
+ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.numpadEnd], (keys) => {
+	windowStates = {};
 
 	let windows = GetWindowHandles();
 	windows.forEach(handle=> {
-		//let text = null, rect = null;
+		if (!user32.IsWindowVisible(handle)) return;
+		
 		let text = GetWindowText(handle);
 		let rect = GetWindowRect(handle);
-		console.log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
+		if (text.length == 0) return;
+		if (windowTitlesToIgnore.Contains(text)) return;
+		//Log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
 
-		/*let text = GetWindowText(handle.Int());
-		let rect = GetWindowRect(handle.Int());*/
-		//console.log(`Found window. @Handle(${handle.Int()}) @Title(${text}) @Rect(${rect})`);
-		
-		/*var buf = ref.alloc('pointer');
-		ref.writePointer(buf, 0, handle); // pointer or memory address*/
-
-		/*let a = Uint8Array.from([1,2,3,7,4,8]) as Buffer;
-		Object.setPrototypeOf(a, Buffer.prototype);
-		a.type = "pointer";
-		
-		console.log(`Found window. @Old(${handle.Int()}) @New(${handle.Int().Buf().Int()}) @Test(${a.address()})`);*/
+		let state = new WindowState({rect, text});
+		windowStates[handle] = state;
 	});
+	Log(`States stored for ${windowStates.Pairs().length} windows.`);
+});
+// show stored info
+ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.numpadDown], (keys) => {
+	for (let pair of windowStates.Pairs()) {
+		Log(`	Window state: @Handle(${pair.key}) @Title(${pair.value.text}) @Rect(${pair.value.rect})`);
+	}
+});
+// restore states
+ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.numpadPageDown], (keys) => {
+	for (let pair of windowStates.Pairs()) {
+		
+	}
+	Log(`States restored for ${windowStates.Pairs().length} windows.`);
 });
 
 // init

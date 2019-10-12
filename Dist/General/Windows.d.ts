@@ -1,4 +1,6 @@
+import { User32 } from 'win32-api';
 import { VRect } from 'js-vextensions';
+export declare const user32: User32.Win32Fns;
 declare type RealBuffer = Buffer;
 declare module "win32-api/node_modules/win32-def/dist/lib/win-model/common" {
     type Buffer = number | RealBuffer;

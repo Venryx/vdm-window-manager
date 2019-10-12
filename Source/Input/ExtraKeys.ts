@@ -33,20 +33,24 @@ export const extraKeys = {
 	// (For example, [numpad insert] is same as [insert], but [numpad +] is not same as [+].)
 	// ==========
 
-	numpadDivide: 111,
+	// 0-9
+	numpadInsert: 45,
+	numpadEnd: 35,
+	numpadDown: 40,
+	numpadPageDown: 34,
+	numpadLeft: 37,
+	numpadCenter: 12, // not sure real name
+	numpadRight: 39,
 	numpadHome: 36,
 	numpadUp: 38,
-	numpadInsert: 45,
+	numpadPageUp: 33,
 
-	numpadCenter: 12, // not sure real name
-	
+	// others, clockwise from top-left
+	numpadDivide: 111,
 	numpadMultiply: 106,
 	numpadSubtract: 109,
 	numpadAdd: 107,
 	numpadEnter: 108,
-
-	numpadEnd: 35,
-	numpadDown: 40,
 };
 
 // smaller copy sets
