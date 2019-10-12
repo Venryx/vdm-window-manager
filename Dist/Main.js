@@ -170,27 +170,50 @@ function G() {
 /*!***********************************!*\
   !*** ./Source/General/Windows.ts ***!
   \***********************************/
-/*! exports provided: user32, WindowInfo, GetWindowHandles, GetForegroundWindowHandle, GetForegroundWindowText, GetWindowText, GetWindowRect, SuspendState, SetSuspendState */
+/*! exports provided: user32, Point, POINT, Rect, RECT, WindowPlacement, WINDOWPLACEMENT, SW_SHOWNORMAL, SW_SHOWMINIMIZED, SW_HIDE, SW_SHOW, SW_MINIMIZE, SW_SHOWMINNOACTIVE, SW_SHOWNA, SW_RESTORE, user32_extra, WindowInfo, GetWindowHandles, GetForegroundWindowHandle, GetForegroundWindowText, GetWindowText, GetWindowRect, GetWindowPlacement, SetWindowPlacement, SuspendState, SetSuspendState */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "user32", function() { return user32; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Point", function() { return Point; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "POINT", function() { return POINT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return Rect; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECT", function() { return RECT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowPlacement", function() { return WindowPlacement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WINDOWPLACEMENT", function() { return WINDOWPLACEMENT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWNORMAL", function() { return SW_SHOWNORMAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWMINIMIZED", function() { return SW_SHOWMINIMIZED; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_HIDE", function() { return SW_HIDE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOW", function() { return SW_SHOW; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_MINIMIZE", function() { return SW_MINIMIZE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWMINNOACTIVE", function() { return SW_SHOWMINNOACTIVE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWNA", function() { return SW_SHOWNA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_RESTORE", function() { return SW_RESTORE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "user32_extra", function() { return user32_extra; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowInfo", function() { return WindowInfo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetWindowHandles", function() { return GetWindowHandles; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetForegroundWindowHandle", function() { return GetForegroundWindowHandle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetForegroundWindowText", function() { return GetForegroundWindowText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetWindowText", function() { return GetWindowText; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetWindowRect", function() { return GetWindowRect; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetWindowPlacement", function() { return GetWindowPlacement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SetWindowPlacement", function() { return SetWindowPlacement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SuspendState", function() { return SuspendState; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SetSuspendState", function() { return SetSuspendState; });
 /* harmony import */ var win32_api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! win32-api */ "win32-api");
 /* harmony import */ var win32_api__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(win32_api__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var ffi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ffi */ "ffi");
 /* harmony import */ var ffi__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(ffi__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! js-vextensions */ "js-vextensions");
-/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(js_vextensions__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var ref__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ref */ "ref");
+/* harmony import */ var ref__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(ref__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! js-vextensions */ "js-vextensions");
+/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(js_vextensions__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var ref_struct__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ref-struct */ "ref-struct");
+/* harmony import */ var ref_struct__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(ref_struct__WEBPACK_IMPORTED_MODULE_4__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
 
 
 
@@ -219,7 +242,7 @@ try {
     var pair = _step.value;
     var definitionArray = pair.value; //Log(`Name(${pair.key}) Returns(${pair.value[0]}) Arguments(${pair.value[1]})`);
 
-    var nodes = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_2__["GetTreeNodesInObjTree"])(definitionArray);
+    var nodes = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["GetTreeNodesInObjTree"])(definitionArray);
     var _iteratorNormalCompletion2 = true;
     var _didIteratorError2 = false;
     var _iteratorError2 = undefined;
@@ -322,6 +345,42 @@ Object.prototype["Buf"] = function() {
     return this; // handle is already number (matching modified definition-array) -- just return
 }*/
 
+var Point = function Point() {
+  _classCallCheck(this, Point);
+};
+var POINT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
+  'x': 'long',
+  'y': 'long'
+});
+var Rect = function Rect() {
+  _classCallCheck(this, Rect);
+};
+var RECT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
+  'left': 'long',
+  'top': 'long',
+  'right': 'long',
+  'bottom': 'long'
+});
+var WindowPlacement = function WindowPlacement() {
+  _classCallCheck(this, WindowPlacement);
+};
+var WINDOWPLACEMENT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
+  'length': 'uint',
+  'flags': 'uint',
+  'showCmd': 'uint',
+  'ptMinPosition': POINT,
+  'ptMaxPosition': POINT,
+  'rcNormalPosition': RECT
+}); //var WINDOWPLACEMENT_REF = ref.refType(WINDOWPLACEMENT);
+
+var SW_SHOWNORMAL = 1;
+var SW_SHOWMINIMIZED = 2;
+var SW_HIDE = 0;
+var SW_SHOW = 5;
+var SW_MINIMIZE = 6;
+var SW_SHOWMINNOACTIVE = 7;
+var SW_SHOWNA = 8;
+var SW_RESTORE = 9;
 var user32_extra = new ffi__WEBPACK_IMPORTED_MODULE_1___default.a.Library("user32", {
   //EnumWindows: ['bool', [voidPtr, 'int32']],
   //GetForegroundWindow: ["int32", []],
@@ -329,7 +388,10 @@ var user32_extra = new ffi__WEBPACK_IMPORTED_MODULE_1___default.a.Library("user3
   //GetWindowTextA : ['long', ['long', stringPtr, 'long']]
   //GetWindowTextW: ["int32", ["int32", ref.refType("string"), "int32"]],
   GetWindowTextLengthW: ["int32", ["int32"]],
-  GetWindowRect: ['bool', ['int32', "pointer"]]
+  GetWindowRect: ['bool', ['int32', "pointer"]],
+  GetWindowPlacement: ["bool", ["int32", ref__WEBPACK_IMPORTED_MODULE_2___default.a.refType(WINDOWPLACEMENT)]],
+  SetWindowPlacement: ["bool", ["int32", ref__WEBPACK_IMPORTED_MODULE_2___default.a.refType(WINDOWPLACEMENT)]],
+  ShowWindow: ['bool', ['int32', 'int32']]
 });
 var WindowInfo = function WindowInfo() {
   _classCallCheck(this, WindowInfo);
@@ -392,6 +454,17 @@ function GetWindowRect(handle) {
 
   return RectToVRect(rect);
 }
+function GetWindowPlacement(handle) {
+  var placementRef = ref__WEBPACK_IMPORTED_MODULE_2___default.a.alloc(WINDOWPLACEMENT);
+  user32_extra.GetWindowPlacement(handle, placementRef);
+  return placementRef.deref();
+}
+function SetWindowPlacement(handle, placement) {
+  /*var placementRef = ref.alloc(WINDOWPLACEMENT);
+  placementRef.writeObject(0, state.placement);*/
+  var placementRef = ref__WEBPACK_IMPORTED_MODULE_2___default.a.alloc(WINDOWPLACEMENT, placement);
+  return user32_extra.SetWindowPlacement(handle, placementRef);
+}
 
 function RectPointerToRect(rectPointer) {
   var rect = {};
@@ -403,7 +476,7 @@ function RectPointerToRect(rectPointer) {
 }
 
 function RectToVRect(rect) {
-  return new js_vextensions__WEBPACK_IMPORTED_MODULE_2__["VRect"](rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
+  return new js_vextensions__WEBPACK_IMPORTED_MODULE_3__["VRect"](rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
 }
 
 var SuspendState;
@@ -577,7 +650,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(iohook__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Input/ExtraKeys */ "./Source/Input/ExtraKeys.ts");
 /* harmony import */ var _General_Windows__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../General/Windows */ "./Source/General/Windows.ts");
+/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! js-vextensions */ "js-vextensions");
+/* harmony import */ var js_vextensions__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(js_vextensions__WEBPACK_IMPORTED_MODULE_3__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 
 
 
@@ -598,7 +674,8 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.useRawcode(true); // use rawcodes 
 
 var windowTitlesToIgnore = [// never visible (as real window)
 "Program Manager", // not really visible (at least usually -- and for me)
-"Microsoft Text Input Application", "Backup and Sync", "Settings", "Microsoft Edge"];
+"Microsoft Text Input Application", "Backup and Sync", "Settings", "Microsoft Edge", // not needing placement-restoring, for other reasons
+"Venryx Overlay"];
 var WindowState = function WindowState(initialData) {
   _classCallCheck(this, WindowState);
 
@@ -612,13 +689,15 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
   windows.forEach(function (handle) {
     if (!_General_Windows__WEBPACK_IMPORTED_MODULE_2__["user32"].IsWindowVisible(handle)) return;
     var text = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowText"])(handle);
-    var rect = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowRect"])(handle);
     if (text.length == 0) return;
-    if (windowTitlesToIgnore.Contains(text)) return; //Log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
+    if (windowTitlesToIgnore.Contains(text)) return;
+    var rect = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowRect"])(handle);
+    var placement = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowPlacement"])(handle); //Log(`Found window. @Handle(${handle}) @Title(${text}) @Rect(${rect})`);
 
     var state = new WindowState({
       rect: rect,
-      text: text
+      text: text,
+      placement: placement
     });
     windowStates[handle] = state;
   });
@@ -632,8 +711,10 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
 
   try {
     for (var _iterator = windowStates.Pairs()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var pair = _step.value;
-      Log("\tWindow state: @Handle(".concat(pair.key, ") @Title(").concat(pair.value.text, ") @Rect(").concat(pair.value.rect, ")"));
+      var _step$value = _step.value,
+          handle = _step$value.key,
+          state = _step$value.value;
+      Log("Window state: @Handle(".concat(handle, ") @Title(").concat(state.text, ") @Rect(").concat(state.rect, ") @Placement(").concat(Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(state.placement), ")"));
     }
   } catch (err) {
     _didIteratorError = true;
@@ -652,13 +733,48 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
 }); // restore states
 
 iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadPageDown], function (keys) {
+  var restoredWindows = 0;
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
   var _iteratorError2 = undefined;
 
   try {
     for (var _iterator2 = windowStates.Pairs()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var pair = _step2.value;
+      var _step2$value = _step2.value,
+          handle = _step2$value.keyNum,
+          state = _step2$value.value;
+      var placement = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowPlacement"])(handle); // if placement is exactly the same as before, don't do anything
+
+      if (Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(placement) == Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(state.placement)) continue; // in case the window just changed screens, have taskbar entry moved to match (by minimizing/restoring then the reverse)
+
+      /*if (state.placement.showCmd == SW_SHOWMINIMIZED) {
+          SetWindowPlacement(handle, state.placement); // apply while minimized, since more reliable
+          user32.ShowWindow(handle, SW_RESTORE);
+          //user32.ShowWindow(handle, SW_MINIMIZE);
+          user32.ShowWindow(handle, state.placement.showCmd);
+      } else {
+          user32.ShowWindow(handle, SW_MINIMIZE);
+          SetWindowPlacement(handle, E(state.placement, {showCmd: SW_SHOWMINIMIZED})); // apply while minimized, since more reliable
+          SetWindowPlacement(handle, state.placement); // apply original showCmd, now that on correct screen
+          user32.ShowWindow(handle, state.placement.showCmd);
+      }*/
+      //user32.ShowWindow(handle, SW_SHOWMINNOACTIVE); // first, set show-state to "minimized", since maximized windows otherwise refuse to change screen
+
+      _General_Windows__WEBPACK_IMPORTED_MODULE_2__["user32"].ShowWindow(handle, _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_HIDE"]); // first, hide window (this seems to make the following steps get applied more quickly graphically)
+
+      _General_Windows__WEBPACK_IMPORTED_MODULE_2__["user32"].ShowWindow(handle, _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_RESTORE"]); // set show-state to "restored", since maximized windows otherwise refuse to change screen
+      //SetWindowPlacement(handle, state.placement); // now that guaranteed on correct screen, apply original show-state
+      //SetWindowPlacement(handle, E(state.placement, {showCmd: SW_RESTORE})); // apply old-placement, except have show-state be "restored", since most reliable for getting on correct screen
+
+      Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, state.placement); // now that in "moveable" state, apply old-placement
+      //user32.ShowWindow(handle, state.placement.showCmd);
+      // in case the window just changed screens, have taskbar entry moved to match
+
+      /*user32.ShowWindow(handle, SW_HIDE);
+      user32.ShowWindow(handle, SW_SHOWNA);*/
+      //user32.ShowWindow(handle, SW_SHOWNA);
+
+      restoredWindows++;
     }
   } catch (err) {
     _didIteratorError2 = true;
@@ -675,7 +791,7 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
     }
   }
 
-  Log("States restored for ".concat(windowStates.Pairs().length, " windows."));
+  Log("States restored for ".concat(restoredWindows, " windows."));
 }); // init
 // ==========
 // register and start hook
@@ -803,6 +919,28 @@ module.exports = require("js-vextensions");
 /***/ (function(module, exports) {
 
 module.exports = require("process");
+
+/***/ }),
+
+/***/ "ref":
+/*!**********************!*\
+  !*** external "ref" ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("ref");
+
+/***/ }),
+
+/***/ "ref-struct":
+/*!*****************************!*\
+  !*** external "ref-struct" ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("ref-struct");
 
 /***/ }),
 

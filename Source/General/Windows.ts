@@ -1,7 +1,8 @@
-import { User32, DTypes, DModel } from 'win32-api';
+import {User32, DTypes, DModel} from 'win32-api';
 import ffi from "ffi";
 import ref, {alloc} from "ref";
 import {VRect, GetTreeNodesInObjTree, ToJSON} from 'js-vextensions';
+import Struct from 'ref-struct';
 
 // make-so any parameter or return type set to W.HWND ("HANDLE"), gets replaced with "int"
 // For more info, see: https://github.com/waitingsong/node-win32-api/issues/16#issuecomment-540887760
@@ -120,14 +121,75 @@ Object.prototype["Buf"] = function() {
 	return this; // handle is already number (matching modified definition-array) -- just return
 }*/
 
-var user32_extra = new ffi.Library("user32", {
+
+
+
+
+
+
+
+
+
+
+export class Point {
+	x: number;
+	y: number;
+}
+export const POINT = Struct({
+	'x': 'long',
+	'y': 'long',
+});
+export class Rect {
+	left: number;
+	top: number;
+	right: number;
+	bottom: Point;
+}
+export const RECT = Struct({
+	'left': 'long',
+	'top': 'long',
+	'right': 'long',
+	'bottom': 'long',
+});
+export class WindowPlacement {
+	length: number;
+	flags: number;
+	showCmd: number;
+	ptMinPosition: Point;
+	ptMaxPosition: Point;
+	rcNormalPosition: Rect;
+}
+export const WINDOWPLACEMENT = Struct({
+	'length': 'uint',
+	'flags': 'uint',
+	'showCmd': 'uint',
+	'ptMinPosition': POINT,
+	'ptMaxPosition': POINT,
+	'rcNormalPosition': RECT,
+});
+//var WINDOWPLACEMENT_REF = ref.refType(WINDOWPLACEMENT);
+
+export const SW_SHOWNORMAL = 1;
+export const SW_SHOWMINIMIZED = 2;
+export const SW_HIDE = 0;
+export const SW_SHOW = 5;
+export const SW_MINIMIZE = 6;
+export const SW_SHOWMINNOACTIVE = 7;
+export const SW_SHOWNA = 8;
+export const SW_RESTORE = 9;
+
+export const user32_extra = new ffi.Library("user32", {
 	//EnumWindows: ['bool', [voidPtr, 'int32']],
 	//GetForegroundWindow: ["int32", []],
-   GetWindowTextA: ["int32", ["int32", "string", "int32"]],
-   //GetWindowTextA : ['long', ['long', stringPtr, 'long']]
+	GetWindowTextA: ["int32", ["int32", "string", "int32"]],
+	//GetWindowTextA : ['long', ['long', stringPtr, 'long']]
 	//GetWindowTextW: ["int32", ["int32", ref.refType("string"), "int32"]],
 	GetWindowTextLengthW: ["int32", ["int32"]],
 	GetWindowRect: ['bool', ['int32', "pointer"]],
+
+	GetWindowPlacement: ["bool", ["int32", ref.refType(WINDOWPLACEMENT)]],
+	SetWindowPlacement: ["bool", ["int32", ref.refType(WINDOWPLACEMENT)]],
+	ShowWindow: ['bool', ['int32', 'int32']],
 });
 
 export class WindowInfo {
@@ -136,7 +198,7 @@ export class WindowInfo {
 }
 export function GetWindowHandles() {
 	let result = [] as number[];
-	let onFoundWindow = ffi.Callback('bool', ['long', 'int32'], (handle: number, lParam: number)=> {
+	let onFoundWindow = ffi.Callback('bool', ['long', 'int32'], (handle: number, lParam: number) => {
 		result.push(handle);
 		return true;
 	});
@@ -198,6 +260,18 @@ export function GetWindowRect(handle: number) {
 	return RectToVRect(rect);
 }
 
+export function GetWindowPlacement(handle: number) {
+	let placementRef = ref.alloc(WINDOWPLACEMENT);
+	user32_extra.GetWindowPlacement(handle, placementRef);
+	return placementRef.deref() as WindowPlacement;
+}
+export function SetWindowPlacement(handle: number, placement: WindowPlacement) {
+	/*var placementRef = ref.alloc(WINDOWPLACEMENT);
+	placementRef.writeObject(0, state.placement);*/
+	var placementRef = ref.alloc(WINDOWPLACEMENT, placement);
+	return user32_extra.SetWindowPlacement(handle, placementRef);
+}
+
 function RectPointerToRect(rectPointer: Buffer) {
 	let rect = {} as any;
 	rect.left = rectPointer.readUInt32LE(0);
@@ -215,7 +289,7 @@ export enum SuspendState {
 }
 
 var powrprof = ffi.Library('powrprof.dll', {
-    SetSuspendState: ['int', ['int', 'int', 'int']]
+	SetSuspendState: ['int', ['int', 'int', 'int']]
 });
 export function SetSuspendState(state: SuspendState) {
 	if (state == SuspendState.Sleep) {
