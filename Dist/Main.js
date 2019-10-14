@@ -170,26 +170,26 @@ function G() {
 /*!***********************************!*\
   !*** ./Source/General/Windows.ts ***!
   \***********************************/
-/*! exports provided: user32, Point, POINT, Rect, RECT, WindowPlacement, WINDOWPLACEMENT, SW_SHOWNORMAL, SW_SHOWMINIMIZED, SW_HIDE, SW_SHOW, SW_MINIMIZE, SW_SHOWMINNOACTIVE, SW_SHOWNA, SW_RESTORE, user32_extra, WindowInfo, GetWindowHandles, GetForegroundWindowHandle, GetForegroundWindowText, GetWindowText, GetWindowRect, GetWindowPlacement, SetWindowPlacement, SuspendState, SetSuspendState */
+/*! exports provided: user32, POINT, RECT, WINDOWPLACEMENT, WPF_ASYNCWINDOWPLACEMENT, SW_HIDE, SW_MAXIMIZE, SW_MINIMIZE, SW_RESTORE, SW_SHOW, SW_SHOWMINIMIZED, SW_SHOWMINNOACTIVE, SW_SHOWNA, SW_SHOWNOACTIVATE, SW_SHOWNORMAL, user32_extra, WindowInfo, GetWindowHandles, GetForegroundWindowHandle, GetForegroundWindowText, GetWindowText, GetWindowRect, GetWindowPlacement, SetWindowPlacement, SuspendState, SetSuspendState */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "user32", function() { return user32; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Point", function() { return Point; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "POINT", function() { return POINT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Rect", function() { return Rect; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECT", function() { return RECT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowPlacement", function() { return WindowPlacement; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WINDOWPLACEMENT", function() { return WINDOWPLACEMENT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWNORMAL", function() { return SW_SHOWNORMAL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWMINIMIZED", function() { return SW_SHOWMINIMIZED; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WPF_ASYNCWINDOWPLACEMENT", function() { return WPF_ASYNCWINDOWPLACEMENT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_HIDE", function() { return SW_HIDE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOW", function() { return SW_SHOW; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_MAXIMIZE", function() { return SW_MAXIMIZE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_MINIMIZE", function() { return SW_MINIMIZE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_RESTORE", function() { return SW_RESTORE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOW", function() { return SW_SHOW; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWMINIMIZED", function() { return SW_SHOWMINIMIZED; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWMINNOACTIVE", function() { return SW_SHOWMINNOACTIVE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWNA", function() { return SW_SHOWNA; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_RESTORE", function() { return SW_RESTORE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWNOACTIVATE", function() { return SW_SHOWNOACTIVATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SW_SHOWNORMAL", function() { return SW_SHOWNORMAL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "user32_extra", function() { return user32_extra; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowInfo", function() { return WindowInfo; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GetWindowHandles", function() { return GetWindowHandles; });
@@ -326,44 +326,17 @@ try {
   }
 }
 
-var user32 = win32_api__WEBPACK_IMPORTED_MODULE_0__["User32"].load(); //user32.GetWindowTextW();
-//var voidPtr = ref.refType(ref.types.void);
-//var stringPtr = ref.refType(ref.types.CString);
-
-/*declare global {
-    interface Buffer { Int(): number; }
-    interface Number { Buf(): Buffer; }
-}
-Object.prototype["Int"] = function() {
-    if (this instanceof Buffer) return ref.address(this); // convert
-    //if (typeof this == "number")
-    return this; // handle is already number -- just return
-}
-Object.prototype["Buf"] = function() {
-    //if (typeof this == "number") return ...; // convert (don't know how)
-    //if (typeof this == "number")
-    return this; // handle is already number (matching modified definition-array) -- just return
-}*/
-
-var Point = function Point() {
-  _classCallCheck(this, Point);
-};
+var user32 = win32_api__WEBPACK_IMPORTED_MODULE_0__["User32"].load();
 var POINT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
   'x': 'long',
   'y': 'long'
 });
-var Rect = function Rect() {
-  _classCallCheck(this, Rect);
-};
 var RECT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
   'left': 'long',
   'top': 'long',
   'right': 'long',
   'bottom': 'long'
 });
-var WindowPlacement = function WindowPlacement() {
-  _classCallCheck(this, WindowPlacement);
-};
 var WINDOWPLACEMENT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
   'length': 'uint',
   'flags': 'uint',
@@ -372,15 +345,21 @@ var WINDOWPLACEMENT = ref_struct__WEBPACK_IMPORTED_MODULE_4___default()({
   'ptMaxPosition': POINT,
   'rcNormalPosition': RECT
 }); //var WINDOWPLACEMENT_REF = ref.refType(WINDOWPLACEMENT);
+// flags
 
-var SW_SHOWNORMAL = 1;
-var SW_SHOWMINIMIZED = 2;
+var WPF_ASYNCWINDOWPLACEMENT = 4; // showCmd (from: https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
+
 var SW_HIDE = 0;
-var SW_SHOW = 5;
+var SW_MAXIMIZE = 3;
 var SW_MINIMIZE = 6;
+var SW_RESTORE = 9;
+var SW_SHOW = 5; //export const SW_SHOWMAXIMIZED = 3; // duplicate of SW_MAXIMIZE?
+
+var SW_SHOWMINIMIZED = 2;
 var SW_SHOWMINNOACTIVE = 7;
 var SW_SHOWNA = 8;
-var SW_RESTORE = 9;
+var SW_SHOWNOACTIVATE = 4;
+var SW_SHOWNORMAL = 1;
 var user32_extra = new ffi__WEBPACK_IMPORTED_MODULE_1___default.a.Library("user32", {
   //EnumWindows: ['bool', [voidPtr, 'int32']],
   //GetForegroundWindow: ["int32", []],
@@ -426,13 +405,15 @@ function GetForegroundWindowText() {
 
 function GetWindowText(handle) {
   //let length = user32_extra.GetWindowTextLengthW(handle as any);
-  var buffer = new Buffer(256); //buffer.type = ref.types.CString;
-  //let length = user32.GetWindowTextW(user32.GetForegroundWindow(), buffer, 256);
-  //let length = user32_extra.GetWindowTextA(handle, buffer, 256);
-  //let length = user32.GetWindowTextA(handle, buffer, 256);
-  //let length = user32.GetWindowTextW(handle.Buf(), buffer, 256);
+  //let bufferSize = 256;
+  var bufferSize = 512;
+  var buffer = new Buffer(bufferSize); //buffer.type = ref.types.CString;
+  //let length = user32.GetWindowTextW(user32.GetForegroundWindow(), buffer, bufferSize);
+  //let length = user32_extra.GetWindowTextA(handle, buffer, bufferSize);
+  //let length = user32.GetWindowTextA(handle, buffer, bufferSize);
+  //let length = user32.GetWindowTextW(handle.Buf(), buffer, bufferSize);
 
-  var length = user32.GetWindowTextW(handle, buffer, 256); //let length = user32.GetWindowTextW(handle as any, buffer, 256);
+  var length = user32.GetWindowTextW(handle, buffer, bufferSize); //let length = user32.GetWindowTextW(handle as any, buffer, bufferSize);
   //return ref.readCString(buffer, 0);
   //return buffer.toString().substr(0, length as any);
 
@@ -640,12 +621,15 @@ process__WEBPACK_IMPORTED_MODULE_6___default.a.on("message", function (message) 
 /*!***********************************!*\
   !*** ./Source/Scripts/General.ts ***!
   \***********************************/
-/*! exports provided: WindowState */
+/*! exports provided: WindowState, StoreStates, ShowStoredStates, RestoreStates */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "WindowState", function() { return WindowState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "StoreStates", function() { return StoreStates; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShowStoredStates", function() { return ShowStoredStates; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RestoreStates", function() { return RestoreStates; });
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! iohook */ "iohook");
 /* harmony import */ var iohook__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(iohook__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Input/ExtraKeys */ "./Source/Input/ExtraKeys.ts");
@@ -657,20 +641,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
- // If using iohook turns out insufficient (eg. not being able to capture keypresses for a desired hotkey), try using the Windows RegisterHotKey function:
-// * https://stackoverflow.com/questions/14799035/node-webkit-winapi/58314436#58314436
-// * https://www.fluxbytes.com/csharp/how-to-register-a-global-hotkey-for-your-application-in-c
-// If that doesn't work, I guess you'll have the use the node-ffi hook approach, even though I think it causes more overhead/delay. (see HotkeyManager.ts)
-
-iohook__WEBPACK_IMPORTED_MODULE_0___default.a.useRawcode(true); // use rawcodes for shortcuts/hotkeys
-// logging
-// ==========
-
-/*ioHook.on('keydown', event => {
-    console.log(event); // { type: 'mousemove', x: 700, y: 400 }
-});*/
-// hotkeys
-// ==========
 
 var windowTitlesToIgnore = [// never visible (as real window)
 "Program Manager", // not really visible (at least usually -- and for me)
@@ -681,9 +651,8 @@ var WindowState = function WindowState(initialData) {
 
   this.Extend(initialData);
 };
-var windowStates = {}; // store states
-
-iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadEnd], function (keys) {
+var windowStates = {};
+function StoreStates() {
   windowStates = {};
   var windows = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowHandles"])();
   windows.forEach(function (handle) {
@@ -702,9 +671,8 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
     windowStates[handle] = state;
   });
   Log("States stored for ".concat(windowStates.Pairs().length, " windows."));
-}); // show stored info
-
-iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadDown], function (keys) {
+}
+function ShowStoredStates() {
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
@@ -730,9 +698,8 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
       }
     }
   }
-}); // restore states
-
-iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadPageDown], function (keys) {
+}
+function RestoreStates() {
   var restoredWindows = 0;
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
@@ -745,35 +712,39 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
           state = _step2$value.value;
       var placement = Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["GetWindowPlacement"])(handle); // if placement is exactly the same as before, don't do anything
 
-      if (Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(placement) == Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(state.placement)) continue; // in case the window just changed screens, have taskbar entry moved to match (by minimizing/restoring then the reverse)
-
-      /*if (state.placement.showCmd == SW_SHOWMINIMIZED) {
-          SetWindowPlacement(handle, state.placement); // apply while minimized, since more reliable
-          user32.ShowWindow(handle, SW_RESTORE);
-          //user32.ShowWindow(handle, SW_MINIMIZE);
-          user32.ShowWindow(handle, state.placement.showCmd);
-      } else {
-          user32.ShowWindow(handle, SW_MINIMIZE);
-          SetWindowPlacement(handle, E(state.placement, {showCmd: SW_SHOWMINIMIZED})); // apply while minimized, since more reliable
-          SetWindowPlacement(handle, state.placement); // apply original showCmd, now that on correct screen
-          user32.ShowWindow(handle, state.placement.showCmd);
-      }*/
-      //user32.ShowWindow(handle, SW_SHOWMINNOACTIVE); // first, set show-state to "minimized", since maximized windows otherwise refuse to change screen
-
-      _General_Windows__WEBPACK_IMPORTED_MODULE_2__["user32"].ShowWindow(handle, _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_HIDE"]); // first, hide window (this seems to make the following steps get applied more quickly graphically)
-
-      _General_Windows__WEBPACK_IMPORTED_MODULE_2__["user32"].ShowWindow(handle, _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_RESTORE"]); // set show-state to "restored", since maximized windows otherwise refuse to change screen
-      //SetWindowPlacement(handle, state.placement); // now that guaranteed on correct screen, apply original show-state
+      if (Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(placement) == Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["ToJSON"])(state.placement)) continue;
+      /*user32.ShowWindow(handle, SW_HIDE); // first, hide window (this seems to make the following steps get applied more quickly graphically)
+      //user32.ShowWindow(handle, SW_SHOWMINNOACTIVE); // set show-state to "minimized", since maximized windows otherwise refuse to change screen
+      user32.ShowWindow(handle, SW_RESTORE); // set show-state to "restored", since maximized windows otherwise refuse to change screen
+      //user32.ShowWindow(handle, SW_SHOWNOACTIVATE); // set show-state to "restored", since maximized windows otherwise refuse to change screen
       //SetWindowPlacement(handle, E(state.placement, {showCmd: SW_RESTORE})); // apply old-placement, except have show-state be "restored", since most reliable for getting on correct screen
-
-      Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, state.placement); // now that in "moveable" state, apply old-placement
-      //user32.ShowWindow(handle, state.placement.showCmd);
+      SetWindowPlacement(handle, state.placement); // now that in "moveable" state, apply old-placement
+      //SetWindowPlacement(handle, E(state.placement, {flags: WPF_ASYNCWINDOWPLACEMENT})); // now that in "moveable" state, apply old-placement*/
       // in case the window just changed screens, have taskbar entry moved to match
 
       /*user32.ShowWindow(handle, SW_HIDE);
       user32.ShowWindow(handle, SW_SHOWNA);*/
       //user32.ShowWindow(handle, SW_SHOWNA);
+      //let finalPlacement = E(state.placement);
+      // state.placement is an instance of a WindowPlacement class (node-ffi created; not the interface defined in Windows.ts), with the props as prototype getters (accessing the "ref.buffer" backing); thus, must use Clone to copy the values
 
+      var finalPlacement = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["Clone"])(state.placement);
+      finalPlacement.flags = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["WPF_ASYNCWINDOWPLACEMENT"];
+
+      if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MAXIMIZE"]) {
+        // first, set show-state to "restored", since maximized windows otherwise refuse to change screen
+        var restorePlacement = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["E"])(finalPlacement, {
+          showCmd: _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWNOACTIVATE"]
+        });
+        Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, restorePlacement);
+        finalPlacement.showCmd = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MAXIMIZE"];
+      } else if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MINIMIZE"] || finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWMINIMIZED"]) {
+        finalPlacement.showCmd = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWMINNOACTIVE"];
+      } else if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWNORMAL"]) {
+        finalPlacement.showCmd = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWNOACTIVATE"];
+      }
+
+      Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, finalPlacement);
       restoredWindows++;
     }
   } catch (err) {
@@ -792,9 +763,29 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
   }
 
   Log("States restored for ".concat(restoredWindows, " windows."));
-}); // init
+} // hotkeys
 // ==========
-// register and start hook
+// If using iohook turns out insufficient (eg. not being able to capture keypresses for a desired hotkey), try using the Windows RegisterHotKey function:
+// * https://stackoverflow.com/questions/14799035/node-webkit-winapi/58314436#58314436
+// * https://www.fluxbytes.com/csharp/how-to-register-a-global-hotkey-for-your-application-in-c
+// If that doesn't work, I guess you'll have the use the node-ffi hook approach, even though I think it causes more overhead/delay. (see HotkeyManager.ts)
+
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.useRawcode(true); // use rawcodes for shortcuts/hotkeys
+// logging
+
+/*ioHook.on('keydown', event => {
+    console.log(event); // { type: 'mousemove', x: 700, y: 400 }
+});*/
+
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadEnd], function (keys) {
+  return StoreStates();
+});
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadDown], function (keys) {
+  return ShowStoredStates();
+});
+iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftControl, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].leftAlt, _Input_ExtraKeys__WEBPACK_IMPORTED_MODULE_1__["extraKeys"].numpadPageDown], function (keys) {
+  return RestoreStates();
+}); // register and start hook
 
 iohook__WEBPACK_IMPORTED_MODULE_0___default.a.start(false);
 Log("Added listeners");

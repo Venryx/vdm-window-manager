@@ -131,7 +131,7 @@ Object.prototype["Buf"] = function() {
 
 
 
-export class Point {
+export interface Point {
 	x: number;
 	y: number;
 }
@@ -139,7 +139,7 @@ export const POINT = Struct({
 	'x': 'long',
 	'y': 'long',
 });
-export class Rect {
+export interface Rect {
 	left: number;
 	top: number;
 	right: number;
@@ -151,7 +151,7 @@ export const RECT = Struct({
 	'right': 'long',
 	'bottom': 'long',
 });
-export class WindowPlacement {
+export interface WindowPlacement {
 	length: number;
 	flags: number;
 	showCmd: number;
@@ -169,14 +169,21 @@ export const WINDOWPLACEMENT = Struct({
 });
 //var WINDOWPLACEMENT_REF = ref.refType(WINDOWPLACEMENT);
 
-export const SW_SHOWNORMAL = 1;
-export const SW_SHOWMINIMIZED = 2;
+// flags
+export const WPF_ASYNCWINDOWPLACEMENT = 4;
+
+// showCmd (from: https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
 export const SW_HIDE = 0;
-export const SW_SHOW = 5;
+export const SW_MAXIMIZE = 3;
 export const SW_MINIMIZE = 6;
+export const SW_RESTORE = 9;
+export const SW_SHOW = 5;
+//export const SW_SHOWMAXIMIZED = 3; // duplicate of SW_MAXIMIZE?
+export const SW_SHOWMINIMIZED = 2;
 export const SW_SHOWMINNOACTIVE = 7;
 export const SW_SHOWNA = 8;
-export const SW_RESTORE = 9;
+export const SW_SHOWNOACTIVATE = 4;
+export const SW_SHOWNORMAL = 1;
 
 export const user32_extra = new ffi.Library("user32", {
 	//EnumWindows: ['bool', [voidPtr, 'int32']],
@@ -228,14 +235,16 @@ export function GetForegroundWindowText() {
 // Note: This function can cause an info-less crash, if: 1) using the W variant, 2) the buffer length is in a certain range [~8-280], 3) the program is launched using "node --inspect"
 export function GetWindowText(handle: number) {
 	//let length = user32_extra.GetWindowTextLengthW(handle as any);
-	var buffer = new Buffer(256);
+	//let bufferSize = 256;
+	let bufferSize = 512;
+	var buffer = new Buffer(bufferSize);
 	//buffer.type = ref.types.CString;
-	//let length = user32.GetWindowTextW(user32.GetForegroundWindow(), buffer, 256);
-	//let length = user32_extra.GetWindowTextA(handle, buffer, 256);
-	//let length = user32.GetWindowTextA(handle, buffer, 256);
-	//let length = user32.GetWindowTextW(handle.Buf(), buffer, 256);
-	let length = user32.GetWindowTextW(handle, buffer, 256);
-	//let length = user32.GetWindowTextW(handle as any, buffer, 256);
+	//let length = user32.GetWindowTextW(user32.GetForegroundWindow(), buffer, bufferSize);
+	//let length = user32_extra.GetWindowTextA(handle, buffer, bufferSize);
+	//let length = user32.GetWindowTextA(handle, buffer, bufferSize);
+	//let length = user32.GetWindowTextW(handle.Buf(), buffer, bufferSize);
+	let length = user32.GetWindowTextW(handle, buffer, bufferSize);
+	//let length = user32.GetWindowTextW(handle as any, buffer, bufferSize);
 	//return ref.readCString(buffer, 0);
 	//return buffer.toString().substr(0, length as any);
 	return buffer.toString('ucs2').replace(/\0+$/, '');

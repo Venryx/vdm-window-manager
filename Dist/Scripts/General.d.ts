@@ -6,3 +6,6 @@ export declare class WindowState {
     text: string;
     placement: WindowPlacement;
 }
+export declare function StoreStates(): void;
+export declare function ShowStoredStates(): void;
+export declare function RestoreStates(): void;
