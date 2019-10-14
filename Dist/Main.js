@@ -788,7 +788,9 @@ iohook__WEBPACK_IMPORTED_MODULE_0___default.a.registerShortcut([_Input_ExtraKeys
 }); // register and start hook
 
 iohook__WEBPACK_IMPORTED_MODULE_0___default.a.start(false);
-Log("Added listeners");
+Log("Added listeners"); // might as well store the window-states at module launch (no real negative, and helps for cases where forget to store states manually, since pre-sleep listener not yet developed)
+
+StoreStates();
 
 /***/ }),
 

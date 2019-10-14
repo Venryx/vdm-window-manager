@@ -112,3 +112,6 @@ ioHook.registerShortcut([extraKeys.leftControl, extraKeys.leftAlt, extraKeys.num
 // register and start hook
 ioHook.start(false);
 Log("Added listeners");
+
+// might as well store the window-states at module launch (no real negative, and helps for cases where forget to store states manually, since pre-sleep listener not yet developed)
+StoreStates();
