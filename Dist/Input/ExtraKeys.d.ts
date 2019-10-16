@@ -16,17 +16,21 @@ export declare const extraKeys: {
     N1: number;
     volumeDown: number;
     volumeUp: number;
-    numpadDivide: number;
+    numpadInsert: number;
+    numpadEnd: number;
+    numpadDown: number;
+    numpadPageDown: number;
+    numpadLeft: number;
+    numpadCenter: number;
+    numpadRight: number;
     numpadHome: number;
     numpadUp: number;
-    numpadInsert: number;
-    numpadCenter: number;
+    numpadPageUp: number;
+    numpadDivide: number;
     numpadMultiply: number;
     numpadSubtract: number;
     numpadAdd: number;
     numpadEnter: number;
-    numpadEnd: number;
-    numpadDown: number;
 };
 export declare enum MouseButton {
     Left,

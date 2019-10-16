@@ -729,20 +729,28 @@ function RestoreStates() {
       // state.placement is an instance of a WindowPlacement class (node-ffi created; not the interface defined in Windows.ts), with the props as prototype getters (accessing the "ref.buffer" backing); thus, must use Clone to copy the values
 
       var finalPlacement = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["Clone"])(state.placement);
-      finalPlacement.flags = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["WPF_ASYNCWINDOWPLACEMENT"];
+      finalPlacement.flags |= _General_Windows__WEBPACK_IMPORTED_MODULE_2__["WPF_ASYNCWINDOWPLACEMENT"]; // first, set show-state to "restored" on the correct screen (fixes taskbar-entry being on wrong screen (todo: confirm), and maximized windows refusing to change screen)
+      //let restorePlacement = E(finalPlacement, {showCmd: SW_SHOWNOACTIVATE}); // this seems to sometimes make window really small, and not maximize from next command
 
-      if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MAXIMIZE"]) {
-        // first, set show-state to "restored", since maximized windows otherwise refuse to change screen
-        var restorePlacement = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["E"])(finalPlacement, {
-          showCmd: _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWNOACTIVATE"]
-        });
-        Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, restorePlacement);
-        finalPlacement.showCmd = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MAXIMIZE"];
-      } else if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MINIMIZE"] || finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWMINIMIZED"]) {
+      var restorePlacement = Object(js_vextensions__WEBPACK_IMPORTED_MODULE_3__["E"])(finalPlacement, {
+        showCmd: _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_RESTORE"]
+      });
+      Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, restorePlacement); // modify show-command to be the non-activating variant
+
+      /*if (finalPlacement.showCmd == SW_MAXIMIZE) {
+          // first, set show-state to "restored", since maximized windows otherwise refuse to change screen
+          //let restorePlacement = E(finalPlacement, {showCmd: SW_SHOWNOACTIVATE}); // this seems to sometimes make window really small, and not maximize from next command
+          /*let restorePlacement = E(finalPlacement, {showCmd: SW_RESTORE});
+          SetWindowPlacement(handle, restorePlacement);*#/
+            finalPlacement.showCmd = SW_MAXIMIZE;
+      } else*/
+
+      if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_MINIMIZE"] || finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWMINIMIZED"]) {
         finalPlacement.showCmd = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWMINNOACTIVE"];
       } else if (finalPlacement.showCmd == _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWNORMAL"]) {
         finalPlacement.showCmd = _General_Windows__WEBPACK_IMPORTED_MODULE_2__["SW_SHOWNOACTIVATE"];
-      }
+      } // apply final placement
+
 
       Object(_General_Windows__WEBPACK_IMPORTED_MODULE_2__["SetWindowPlacement"])(handle, finalPlacement);
       restoredWindows++;

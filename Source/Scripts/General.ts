@@ -70,19 +70,28 @@ export function RestoreStates() {
 		//let finalPlacement = E(state.placement);
 		// state.placement is an instance of a WindowPlacement class (node-ffi created; not the interface defined in Windows.ts), with the props as prototype getters (accessing the "ref.buffer" backing); thus, must use Clone to copy the values
 		let finalPlacement = Clone(state.placement);
-		finalPlacement.flags = WPF_ASYNCWINDOWPLACEMENT;
+		finalPlacement.flags |= WPF_ASYNCWINDOWPLACEMENT;
 
-		if (finalPlacement.showCmd == SW_MAXIMIZE) {
+		// first, set show-state to "restored" on the correct screen (fixes taskbar-entry being on wrong screen (todo: confirm), and maximized windows refusing to change screen)
+		//let restorePlacement = E(finalPlacement, {showCmd: SW_SHOWNOACTIVATE}); // this seems to sometimes make window really small, and not maximize from next command
+		let restorePlacement = E(finalPlacement, {showCmd: SW_RESTORE});
+		SetWindowPlacement(handle, restorePlacement);
+
+		// modify show-command to be the non-activating variant
+		/*if (finalPlacement.showCmd == SW_MAXIMIZE) {
 			// first, set show-state to "restored", since maximized windows otherwise refuse to change screen
-			let restorePlacement = E(finalPlacement, {showCmd: SW_SHOWNOACTIVATE});
-			SetWindowPlacement(handle, restorePlacement);
+			//let restorePlacement = E(finalPlacement, {showCmd: SW_SHOWNOACTIVATE}); // this seems to sometimes make window really small, and not maximize from next command
+			/*let restorePlacement = E(finalPlacement, {showCmd: SW_RESTORE});
+			SetWindowPlacement(handle, restorePlacement);*#/
 
 			finalPlacement.showCmd = SW_MAXIMIZE;
-		} else if (finalPlacement.showCmd == SW_MINIMIZE || finalPlacement.showCmd == SW_SHOWMINIMIZED) {
+		} else*/ if (finalPlacement.showCmd == SW_MINIMIZE || finalPlacement.showCmd == SW_SHOWMINIMIZED) {
 			finalPlacement.showCmd = SW_SHOWMINNOACTIVE;
 		} else if (finalPlacement.showCmd == SW_SHOWNORMAL) {
 			finalPlacement.showCmd = SW_SHOWNOACTIVATE;
 		}
+
+		// apply final placement
 		SetWindowPlacement(handle, finalPlacement);
 
 		restoredWindows++;
