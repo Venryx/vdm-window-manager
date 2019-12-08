@@ -1,6 +1,8 @@
 // "static" imports
 import "./General/Start_0";
-import "js-vextensions";
+//import "js-vextensions/Helpers/@ApplyCETypes.d.ts";
+type __ = typeof import("../node_modules/js-vextensions/Helpers/@ApplyCETypes");
+import "js-vextensions/Helpers/@ApplyCECode.js";
 import "./General/ClassExtensions/CE_General";
 import "./General/Logging";
 //import "babel-core/register";

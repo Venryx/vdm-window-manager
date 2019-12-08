@@ -1,8 +1,11 @@
 import {User32, DTypes, DModel} from 'win32-api';
 import ffi from "ffi";
 import ref, {alloc} from "ref";
-import {VRect, GetTreeNodesInObjTree, ToJSON} from 'js-vextensions';
+import {VRect, GetTreeNodesInObjTree, ToJSON, CE} from 'js-vextensions';
 import Struct from 'ref-struct';
+
+// mod win32-api to use number-based handles (instead of Buffers)
+// ==========
 
 // make-so any parameter or return type set to W.HWND ("HANDLE"), gets replaced with "int"
 // For more info, see: https://github.com/waitingsong/node-win32-api/issues/16#issuecomment-540887760
@@ -19,7 +22,7 @@ let replacements = [
 
 	//{oldValue: "uint16*", newValue: "string"},
 ];
-for (let pair of User32.apiDef.Pairs()) {
+for (let pair of CE(User32.apiDef).Pairs()) {
 	let definitionArray = pair.value;
 	//Log(`Name(${pair.key}) Returns(${pair.value[0]}) Arguments(${pair.value[1]})`);
 
@@ -102,7 +105,8 @@ declare module "win32-api/node_modules/win32-def/dist/lib/win-model/common" {
 
 
 
-
+// general
+// ==========
 //var voidPtr = ref.refType(ref.types.void);
 //var stringPtr = ref.refType(ref.types.CString);
 
@@ -111,7 +115,13 @@ declare module "win32-api/node_modules/win32-def/dist/lib/win-model/common" {
 	interface Number { Buf(): Buffer; }
 }
 Object.prototype["Int"] = function() {
-	if (this instanceof Buffer) return ref.address(this); // convert
+	// convert
+	if (this instanceof Buffer) {
+		//return ref.address(this);
+		this["type"] = ref.types.int64;
+		return temp1["deref"]();
+	}
+
 	//if (typeof this == "number")
 	return this; // handle is already number -- just return
 }

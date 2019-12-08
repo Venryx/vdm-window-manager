@@ -273,7 +273,7 @@ export function OnKeyPressed(keyCode: number, fullData: number[]) {
 	if (logKeys) {
 		let key = String.fromCharCode(keyCode).toLowerCase();
 		//console.log(`KeyDown: ${keyCode} (${key}) (${fullData.join(",")})`);
-		console.log(`KeyDown: ${keyCode} (${key}) keys: ${keysDown.Props().filter(a=>a.value).map(a=>a.name).join(",")} AD:${keyAlreadyDown}`);
+		console.log(`KeyDown: ${keyCode} (${key}) keys: ${keysDown.Pairs().filter(a=>a.value).map(a=>a.key).join(",")} AD:${keyAlreadyDown}`);
 	}
 	if (keys_waitTillDownListeners[keyCode]) {
 		keys_waitTillDownListeners[keyCode].forEach(listener=>listener());
@@ -297,7 +297,7 @@ export function OnKeyPressed(keyCode: number, fullData: number[]) {
 	});
 
 	var captured = false;
-	for (let hotkey of hotkeysToTrigger.OrderByDescending(a=>a.priority)) {
+	for (let hotkey of hotkeysToTrigger.OrderByDescending(a=>a.priority) as Hotkey[]) {
 		let capture = hotkey.onDown();
 		if (capture == null || capture instanceof Promise) { // a Promise result is equivalent to null (func with no immediate/explicit return value)
 			capture = hotkey.capture;
@@ -337,7 +337,7 @@ export function OnKeyReleased(keyCode: number, fullData: number[]) {
 	keysDown[keyCode] = false;
 	if (logKeys) {
 		//console.log(`KeyUp: ${keyCode} (${key}) (${fullData.join(",")})`);
-		console.log(`KeyUp: ${keyCode} (${key}) keys: ${keysDown.Props().filter(a=>a.value).map(a=>a.name).join(",")}`);
+		console.log(`KeyUp: ${keyCode} (${key}) keys: ${keysDown.Pairs().filter(a=>a.value).map(a=>a.key).join(",")}`);
 	}
 
 	if (keys_waitTillUpListeners[keyCode]) {

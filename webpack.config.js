@@ -20,7 +20,11 @@ module.exports = {
 	target: "node",
 	externals: nodeModules,
 	resolve: {
-		extensions: [".ts"],
+		extensions: [
+			'.js', '.jsx', '.json',
+			'.ts', '.tsx', // always accept ts[x], because there might be some in node_modules (eg. vwebapp-framework)
+			//'.mjs', // needed for mobx-sync
+		],
 	},
 	devtool: "cheap-module-source-map",
 	module: {
