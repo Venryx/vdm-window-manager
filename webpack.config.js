@@ -2,11 +2,16 @@ var webpack = require("webpack");
 var path = require("path");
 var fs = require("fs");
 
-var nodeModules = {};
+let es2015Modules = ["js-vextensions"];
+
+var extModules = {};
 for (let folder of fs.readdirSync("node_modules")) {
 	if (folder == ".bin") continue;
-	nodeModules[folder] = "commonjs " + folder;
+	// bundle these using webpack, since they are es2015, and NodeJS can't (itself) import es2015 from a Webpack bundle
+	if (es2015Modules.includes(folder)) continue;
+	extModules[folder] = "commonjs " + folder;
 }
+extModules.edge = "edge-js"; // fixes issue (forget what it was)
 
 module.exports = {
 	mode: "development",
@@ -18,7 +23,7 @@ module.exports = {
 		libraryTarget: "umd",
 	},
 	target: "node",
-	externals: nodeModules,
+	externals: extModules,
 	resolve: {
 		extensions: [
 			'.js', '.jsx', '.json',

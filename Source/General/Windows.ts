@@ -89,7 +89,8 @@ user32.GetWindowTextW();*/
 	}
 }*/
 type RealBuffer = Buffer;
-declare module "win32-api/node_modules/win32-def/dist/lib/win-model/common" {
+//declare module "win32-api/node_modules/win32-def/dist/lib/win-model/common" {
+declare module "win32-def/dist/lib/win-model/common" {
 	//type HWND = number;
 	//type Buffer = number;
 	type Buffer = number | RealBuffer;
