@@ -10,7 +10,6 @@ Note: These instructions are old; some steps might not be needed.
 2) Install NodeJS version compatible with node-ffi. (recommend using nvm-windows)
 3) Run `npm install --global --production windows-build-tools`.
 4) Run `npm install` in root folder.
-5) Run `npm install` in `node_modules/robotjs` folder. (needed on 2nd-computer, anyway)
 
 ### Usage
 

@@ -3,7 +3,6 @@ import ref from "ref";
 import {IgnoreNextKeyPress, IgnoreNextKeyRelease, keysDown} from "./HotkeyManager";
 import Struct from "ref-struct";
 import {extraKeys, MouseButton} from "./ExtraKeys";
-import robot from "robotjs";
 import { GetForegroundWindowHandle } from "../General/Windows";
 import { Vector2i } from "js-vextensions";
 import keycode from "keycode";
@@ -26,6 +25,7 @@ var user32 = ffi.Library("user32", {
 	ClipCursor: ["bool", [RectStruct]],
 	//ClipCursor: ["bool", [RectPtr]],
 	mouse_event: ["void", ["int32", "int32", "int32", "int32", "int32"]],
+	GetCursorPos: ["bool", [ref.refType(PointStruct)]],
 	SetCursorPos: ["long", ["long", "long"]],
 	//SendMessageA: ["int64", ["int32", "uint32", "int32", "int32"]]
 	SendMessageA: ['int32', ['long', 'int32', 'long', 'int32']],
@@ -54,8 +54,13 @@ enum MouseEventFlags {
 let screenWidth = 1920;
 let screenHeight = 1080;
 
-export function GetMousePosition(): Vector2i {
-	let mousePos = robot.getMousePos();
+export function GetMousePos() {
+	/*let buffer = GetCursorPos_resultBuffer;
+	var p = user32.GetCursorPos(buffer);
+	return new Vector2i(buffer[0] + (buffer[1] * 256), buffer[4] + (buffer[5] * 256));*/
+	let mousePosBuffer = ref.alloc(PointStruct);
+	var success = user32.GetCursorPos(mousePosBuffer);
+	let mousePos = mousePosBuffer["deref"]() as {x: number, y: number};
 	return new Vector2i(mousePos.x, mousePos.y);
 }
 
@@ -65,6 +70,8 @@ export function MoveMouse(x: number, y: number) {
 	/*let currentMousePos = robot.getMousePos();
 	let x_final = ((((x|0) / screenWidth) * 65535)|0) - currentMousePos.x;
 	let y_final = ((((y|0) / screenHeight) * 65535)|0) - currentMousePos.y;*/
+
+	//user32.SetCursorPos(x_final, y_final);
 
 	// todo: add way of having mouse-move event ignored
 	//for (var i = 0; i < 2; i++) {
@@ -106,7 +113,7 @@ function MAKELPARAM(p, p_2) {
 }
 
 export function ClickMouse(mouseButton = MouseButton.Left, position?: Vector2i, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
-	position = position || GetMousePosition();
+	position = position || GetMousePos();
 	//let positionSupplied = x != null || y != null;
 
 	/*let x_final = (((x|0) / screenWidth) * 65535)|0;
@@ -147,7 +154,7 @@ export function ClickMouse(mouseButton = MouseButton.Left, position?: Vector2i, 
 }
 
 export function MouseDown(mouseButton = MouseButton.Left, position?: Vector2i, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
-	position = position || GetMousePosition();
+	position = position || GetMousePos();
 	let handle = GetForegroundWindowHandle();
 	if (handle) {
 		let clickPoint = MAKELPARAM(position.x, position.y);
@@ -156,7 +163,7 @@ export function MouseDown(mouseButton = MouseButton.Left, position?: Vector2i, c
 	}
 }
 export function MouseUp(mouseButton = MouseButton.Left, position?: Vector2i, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
-	position = position || GetMousePosition();
+	position = position || GetMousePos();
 	let handle = GetForegroundWindowHandle();
 	if (handle) {
 		let clickPoint = MAKELPARAM(position.x, position.y);

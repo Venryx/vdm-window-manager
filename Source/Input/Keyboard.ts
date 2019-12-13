@@ -1,4 +1,3 @@
-import robot from "robotjs";
 import keycode from "keycode";
 import {IgnoreNextKeyRelease, IgnoreNextKeyPress, WM_SYSKEYUP, WM_SYSKEYDOWN, keysDown} from "./HotkeyManager";
 import ffi from "ffi";

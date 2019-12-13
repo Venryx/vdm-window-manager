@@ -1,4 +1,3 @@
-import robot from "robotjs";
 import ffi from "ffi";
 import chroma from "chroma-js";
 
