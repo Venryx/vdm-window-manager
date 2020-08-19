@@ -1,6 +1,7 @@
+/// <reference types="node" />
+/// <reference types="ref-napi" />
 import { User32 } from 'win32-api';
 import { VRect } from 'js-vextensions';
-import Struct from 'ref-struct';
 export declare const user32: User32.Win32Fns;
 declare type RealBuffer = Buffer;
 declare module "win32-def/dist/lib/win-model/common" {
@@ -10,14 +11,14 @@ export interface Point {
     x: number;
     y: number;
 }
-export declare const POINT: Struct;
+export declare const POINT: any;
 export interface Rect {
     left: number;
     top: number;
     right: number;
     bottom: Point;
 }
-export declare const RECT: Struct;
+export declare const RECT: any;
 export interface WindowPlacement {
     length: number;
     flags: number;
@@ -26,7 +27,7 @@ export interface WindowPlacement {
     ptMaxPosition: Point;
     rcNormalPosition: Rect;
 }
-export declare const WINDOWPLACEMENT: Struct;
+export declare const WINDOWPLACEMENT: any;
 export declare const WPF_ASYNCWINDOWPLACEMENT = 4;
 export declare const SW_HIDE = 0;
 export declare const SW_MAXIMIZE = 3;

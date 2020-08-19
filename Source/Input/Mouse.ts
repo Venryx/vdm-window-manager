@@ -1,11 +1,11 @@
-import ffi from "ffi";
-import ref from "ref";
+import ffi from "ffi-napi";
+import ref from "ref-napi";
 import {IgnoreNextKeyPress, IgnoreNextKeyRelease, keysDown} from "./HotkeyManager";
-import Struct from "ref-struct";
 import {extraKeys, MouseButton} from "./ExtraKeys";
 import { GetForegroundWindowHandle } from "../General/Windows";
-import { Vector2i } from "js-vextensions";
-import keycode from "keycode";
+import { Vector2 } from "js-vextensions";
+
+const Struct = require("ref-struct-di")(ref);
 
 declare var Buffer;
 var IntPtr = ref.refType("int");
@@ -60,8 +60,8 @@ export function GetMousePos() {
 	return new Vector2i(buffer[0] + (buffer[1] * 256), buffer[4] + (buffer[5] * 256));*/
 	let mousePosBuffer = ref.alloc(PointStruct);
 	var success = user32.GetCursorPos(mousePosBuffer);
-	let mousePos = mousePosBuffer["deref"]() as {x: number, y: number};
-	return new Vector2i(mousePos.x, mousePos.y);
+	let mousePos = mousePosBuffer["deref"](null) as {x: number, y: number};
+	return new Vector2(mousePos.x, mousePos.y);
 }
 
 export function MoveMouse(x: number, y: number) {
@@ -112,7 +112,7 @@ function MAKELPARAM(p, p_2) {
 	return ((p_2 << 16) | (p & 0xFFFF));
 }
 
-export function ClickMouse(mouseButton = MouseButton.Left, position?: Vector2i, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
+export function ClickMouse(mouseButton = MouseButton.Left, position?: Vector2, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
 	position = position || GetMousePos();
 	//let positionSupplied = x != null || y != null;
 
@@ -153,7 +153,7 @@ export function ClickMouse(mouseButton = MouseButton.Left, position?: Vector2i, 
 	//Log(`Clicked...${x_final},${y_final}`);
 }
 
-export function MouseDown(mouseButton = MouseButton.Left, position?: Vector2i, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
+export function MouseDown(mouseButton = MouseButton.Left, position?: Vector2, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
 	position = position || GetMousePos();
 	let handle = GetForegroundWindowHandle();
 	if (handle) {
@@ -162,7 +162,7 @@ export function MouseDown(mouseButton = MouseButton.Left, position?: Vector2i, c
 		user32.SendMessageA(handle, WMessages[MouseButton[mouseButton] + "_Down"], modifierFlags, clickPoint);
 	}
 }
-export function MouseUp(mouseButton = MouseButton.Left, position?: Vector2i, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
+export function MouseUp(mouseButton = MouseButton.Left, position?: Vector2, ctrlModifierAllowed = true, shiftModifierAllowed = true, altModifierAllowed = false) {
 	position = position || GetMousePos();
 	let handle = GetForegroundWindowHandle();
 	if (handle) {

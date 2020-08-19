@@ -1,8 +1,8 @@
 import {User32, DTypes, DModel} from 'win32-api';
-import ffi from "ffi";
-import ref, {alloc} from "ref";
+import ffi from "ffi-napi";
+import ref, {alloc} from "ref-napi";
 import {VRect, GetTreeNodesInObjTree, ToJSON, CE} from 'js-vextensions';
-import Struct from 'ref-struct';
+const Struct = require("ref-struct-di")(ref);
 
 // mod win32-api to use number-based handles (instead of Buffers)
 // ==========
@@ -283,7 +283,7 @@ export function GetWindowRect(handle: number) {
 export function GetWindowPlacement(handle: number) {
 	let placementRef = ref.alloc(WINDOWPLACEMENT);
 	user32_extra.GetWindowPlacement(handle, placementRef);
-	return placementRef.deref() as WindowPlacement;
+	return placementRef.deref(null) as WindowPlacement;
 }
 export function SetWindowPlacement(handle: number, placement: WindowPlacement) {
 	/*var placementRef = ref.alloc(WINDOWPLACEMENT);

@@ -1,11 +1,13 @@
-import { Vector2i } from "js-vextensions";
+/// <reference types="node" />
+/// <reference types="ref-napi" />
+import { Vector2 } from "js-vextensions";
 export declare const WM_KEYDOWN = 256;
 export declare const WM_KEYUP = 257;
 export declare const WM_SYSKEYDOWN = 260;
 export declare const WM_SYSKEYUP = 261;
 export declare var keyboardHook_callback: Buffer;
-export declare function GetMousePos(): Vector2i;
-export declare type MouseMoveListener = (mousePos: Vector2i) => void;
+export declare function GetMousePos(): Vector2;
+export declare type MouseMoveListener = (mousePos: Vector2) => void;
 export declare function AddMouseMoveListener(func: MouseMoveListener): void;
 export declare var mouseHook_callback: Buffer;
 export declare function AddHook(): any;

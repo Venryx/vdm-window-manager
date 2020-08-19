@@ -1,8 +1,8 @@
-import ffi from "ffi";
-import ref from "ref";
+import ffi from "ffi-napi";
+import ref from "ref-napi";
 import {extraKeys} from "./ExtraKeys";
 import keycode from "keycode";
-import { GetStackTraceStr, Vector2i, Assert } from "js-vextensions";
+import { GetStackTraceStr, Vector2, Assert } from "js-vextensions";
 import {ConvertByteArrayToInt} from "../General/General";
 import { StartEventLoop, StopEventLoop } from "./EventLoop";
 
@@ -101,12 +101,12 @@ let simpleMouseButtonEvents = {
 };
 
 //let mousePosition = new Vector2i(NaN, NaN);
-let mousePosition = new Vector2i(0, 0);
+let mousePosition = new Vector2(0, 0);
 export function GetMousePos() {
 	return mousePosition;
 }
 
-export type MouseMoveListener = (mousePos: Vector2i)=>void;
+export type MouseMoveListener = (mousePos: Vector2)=>void;
 let mouseMoveListeners = [] as MouseMoveListener[];
 export function AddMouseMoveListener(func: MouseMoveListener) {
 	mouseMoveListeners.push(func);
@@ -117,7 +117,7 @@ export var mouseHook_callback = ffi.Callback("int", ["int", "int", intPtr_varian
 		var captured = false;
 		//console.log(`nCode: ${nCode} eventType: ${eventType} data: ${data.join(",")}`);
 
-		let newMousePos = new Vector2i(ConvertByteArrayToInt(data.slice(0, 4)), ConvertByteArrayToInt(data.slice(4, 8)));
+		let newMousePos = new Vector2(ConvertByteArrayToInt(data.slice(0, 4)), ConvertByteArrayToInt(data.slice(4, 8)));
 		if (!newMousePos.Equals(mousePosition)) {
 			mousePosition = newMousePos;
 			for (let listener of mouseMoveListeners) {

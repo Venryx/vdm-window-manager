@@ -1,4 +1,4 @@
-import ffi from "ffi";
+import ffi from "ffi-napi";
 import chroma from "chroma-js";
 
 /*export function GetPixelColor(x: number, y: number) {

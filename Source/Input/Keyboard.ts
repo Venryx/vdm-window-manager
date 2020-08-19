@@ -1,17 +1,18 @@
 import keycode from "keycode";
 import {IgnoreNextKeyRelease, IgnoreNextKeyPress, WM_SYSKEYUP, WM_SYSKEYDOWN, keysDown} from "./HotkeyManager";
-import ffi from "ffi";
+import ffi from "ffi-napi";
 import {extraKeys} from "./ExtraKeys";
 import { GetForegroundWindowHandle } from "../General/Windows";
-import ref from "ref";
-import StructType from "ref-struct";
+import ref from "ref-napi";
 import {SleepAsync, Assert} from "js-vextensions";
-var ArrayType = require("ref-array");
+
+//var ArrayType = require("ref-array");
 var arch = require("os").arch();
+const Struct = require("ref-struct-di")(ref);
 
 var intPtr = ref.refType("int");
 
-var Input = StructType({
+var Input = Struct({
 	"type": "int",
 	"???": "int", // for some reason, the wScan value is only recognized as the wScan value when we add this filler slot
 	"wVK": "short",
